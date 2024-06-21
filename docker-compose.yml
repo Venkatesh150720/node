@@ -1,0 +1,32 @@
+version: '3.9'
+
+services:
+  mongo_db:
+    container_name: db_container
+    image: mango:latest
+    restart: always
+    volumes: 
+      - mongo_db:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example  
+
+  node_app:
+    build: .
+    container_name: node_container
+    ports:
+      - 3000:3000
+    environment:
+      PORT: 3000
+      MONGODB_URI: mongodb://mongo_db:27017
+      DB_NAME: my_db
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example  
+    depends_on:
+      - mongo_db
+
+volumes:
+  mongo_db: {}
+
+
+
